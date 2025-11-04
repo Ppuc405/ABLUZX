@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ABLuz — Poesía</title>
+  <meta name="theme-color" content="#000" />
+  <style>
+    :root { --w: 520px; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin:0; color:#fff; background:#000; overflow-x:hidden; }
+
+    /* ===== Fondo video pantalla completa ===== */
+    .bg-video{
+      position: fixed; inset: 0; z-index: -2;
+      width:100vw; height:100dvh; min-height:100vh;
+      object-fit:cover; display:block; background:#000;
+    }
+    .scrim{
+      position: fixed; inset: 0; z-index: -1;
+      background: radial-gradient(120% 120% at 50% 10%, rgba(0,0,0,.15), rgba(0,0,0,.65) 60%, rgba(0,0,0,.82));
+      pointer-events:none;
+    }
+
+    /* ===== Contenido ===== */
+    .wrap{ max-width:var(--w); margin:0 auto; padding:28px 16px 60px; }
+    header{ text-align:center; margin-bottom:14px; }
+    h1{ font-size:30px; margin:0 0 6px; letter-spacing:.5px; }
+    .card{
+      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius:20px; padding:18px; margin:14px 0;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+    .card h2{ margin:0 0 12px; font-size:18px; opacity:.95; }
+
+    /* Recuadro de “YouTube”, ahora con tu MP4 */
+    .video-box{ position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#000; }
+    .video-box video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+    .tap-audio{
+      position:absolute; right:10px; bottom:10px;
+      background:#111; color:#fff; padding:8px 10px; border-radius:999px; font-size:12px; opacity:.9;
+      user-select:none; -webkit-user-select:none;
+    }
+
+    .poem{ font-size:18px; line-height:1.65; white-space:pre-wrap; }
+    footer{ text-align:center; opacity:.7; font-size:12px; margin-top:20px; }
+  </style>
+</head>
+<body>
+  <!-- Fondo videosur -->
+  <video class="bg-video" id="bgvid" playsinline muted autoplay loop preload="auto">
+    <source src="VIDEOSUR.mp4?v=2" type="video/mp4" />
+
+  </video>
+  <div class="scrim"></div>
+
+  <main class="wrap">
+    <header>
+      <h1>ABLuz</h1>
+      <div class="subtitle" style="opacity:.85;font-size:14px">Esto te pertenece</div>
+    </header>
+
+    <!-- Recuadro (antes YouTube) ahora con tu MP4 -->
+    <section class="card">
+      <h2>Para ti…</h2>
+      <div class="video-box" id="songBox">
+        <video id="song" playsinline muted autoplay preload="auto" controlslist="nodownload noplaybackrate">
+          <!-- El nombre lleva espacios/comas, por eso va URL-encoded -->
+          <source src="gino.mp4" type="video/mp4" />
+        </video>
+        <div class="tap-audio" id="hint">🔊 toca para activar sonido</div>
+      </div>
+      <small style="display:block;opacity:.75;margin-top:8px">
+        Datito: Por culpa de las politicas de experiencia del usuario de navegadores, no se permite agregar autoplay sin usar muted jsjsjs asi que mejor toca el boton 🔊 para activar el audio.
+      </small>
+    </section>
+
+    <!-- Poema -->
+    <section class="card">
+      <h2>Si tu...</h2>
+      <p class="poem">
+Si me permites acercarme a tu orilla, quiero que sepas que ante ti estoy de pie, 
+no para forzar, ni apurar, ni pedir; solo para entregarte mi esencia más pulida.
+
+Traigo conmigo mi mejor versión, franca y dispuesta a ser refugio y luz serena. 
+Percibo el eco del peso en tu alma, y en ese silencio, mi espíritu te acompaña.
+
+No busco guiar la forma de tu paso, entiendo que tu tiempo es solo tuyo. 
+No hay prisa en mi contemplar, ni en mi abrazo; solo un eco de respeto que comprende y no apresura.
+
+Si el dolor te roza con su manto, déjame ser la compañía que te guarde, 
+el puerto firme al que acude tu pena, la mano suave que te protege de la tarde.
+
+Y en medio de la niebla, ten presente que mi anhelo es sembrar una semilla; 
+que mi mayor deseo es, simplemente, robarle al cielo para ti una sonrisa.
+
+Porque tu paz me importa, y tu alma me inspira, aquí estoy, a tu lado, sin ataduras. 
+Mi misión es sembrar, paciente, sin estruendo, el deseo infinito de ver tu luz brillar. 
+Y al sentir nuestra conexión tan nuestra, tan clara y comprendiendo...
+
+¡Anhelo el instante en que tu boca me regale un destello de ese encuentro!
+      </p>
+    </section>
+
+    <footer>© Priss</footer>
+  </main>
+
+  <script>
+    // Fondo no necesita jump; es loop de ambiente
+    const song = document.getElementById('song');
+    const hint = document.getElementById('hint');
+    const songBox = document.getElementById('songBox');
+
+    // Inicia la canción desde 0:20 cuando carguen metadatos
+    song.addEventListener('loadedmetadata', () => {
+      try { song.currentTime = 20; } catch(_) {}
+      const p = song.play();
+      if (p && p.catch) p.catch(()=>{}); // Algunos navegadores requieren interacción previa
+    });
+
+    // Un toque activa el audio (sin tener que presionar Play)
+    songBox.addEventListener('pointerdown', () => {
+      song.muted = false;
+      song.volume = 1.0;
+      song.play();
+      if (hint) hint.style.display = 'none';
+    }, { once:true });
+  </script>
+</body>
+</html>
